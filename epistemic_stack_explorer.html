@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Epistemic Stack — Interactive Explorer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a18;line-height:1.6}
+.page{max-width:780px;margin:0 auto;padding:2.5rem 2rem}
+h1{font-size:22px;font-weight:500;margin-bottom:4px;color:#1a1a18}
+.subtitle{font-size:14px;color:#6b6b67;margin-bottom:2rem}
+.tabs{display:flex;gap:0;margin-bottom:2rem;border-bottom:1px solid #e0ded8}
+.tab{padding:10px 22px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:none;color:#6b6b67;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.tab.active{color:#1a1a18;border-bottom-color:#1a1a18}
+.panel{display:none}.panel.active{display:block}
+
+/* Pipeline */
+.layer{border:1px solid #e0ded8;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:10px;cursor:pointer;transition:border-color .15s,background .15s;background:#fff}
+.layer:hover{border-color:#b0aea8;background:#fafaf8}
+.layer.open{border-color:#b0aea8;background:#fafaf8}
+.layer-head{display:flex;align-items:center;gap:12px}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dot-gray{background:#888780}
+.dot-teal{background:#1D9E75}
+.dot-purple{background:#7F77DD}
+.dot-coral{background:#D85A30}
+.dot-amber{background:#BA7517}
+.layer-name{font-size:15px;font-weight:500}
+.layer-tagline{font-size:13px;color:#6b6b67;margin-top:2px;margin-left:22px}
+.chevron{margin-left:auto;color:#b0aea8;font-size:12px;transition:transform .2s}
+.layer.open .chevron{transform:rotate(180deg)}
+.layer-body{display:none;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid #e0ded8}
+.layer.open .layer-body{display:block}
+.item{font-size:13px;color:#444441;line-height:1.75;margin-bottom:10px}
+.item strong{font-weight:500;color:#1a1a18}
+.code{font-family:'SF Mono',Consolas,monospace;font-size:12px;background:#f0eed8;padding:2px 6px;border-radius:4px;color:#3a3a38}
+.badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:99px;font-weight:500;margin-top:8px}
+.badge-teal{background:#E1F5EE;color:#085041}
+.badge-purple{background:#EEEDFE;color:#3C3489}
+.badge-coral{background:#FAECE7;color:#712B13}
+.badge-amber{background:#FAEEDA;color:#633806}
+.badge-gray{background:#F1EFE8;color:#444441}
+.arrow-row{display:flex;justify-content:center;margin:2px 0}
+.arrow-dn{width:1px;height:22px;background:#d0ced8;position:relative;display:flex;justify-content:center}
+.arrow-dn::after{content:'';position:absolute;bottom:-5px;left:-4px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:6px solid #d0ced8}
+
+/* CONTEXT_MUTATION */
+.cm-toggle{display:flex;gap:8px;margin-bottom:1.75rem}
+.tog{font-size:13px;padding:7px 18px;border-radius:99px;border:1px solid #d0ced8;cursor:pointer;background:#fff;color:#6b6b67;font-weight:500;transition:all .15s}
+.tog.on{background:#1a1a18;color:#fff;border-color:#1a1a18}
+.cm-section{display:none}.cm-section.active{display:block}
+.cm-grid{display:grid;grid-template-columns:1fr 120px 1fr;gap:16px;align-items:center}
+.cm-card{border:1px solid #e0ded8;border-radius:10px;padding:1.25rem;background:#fff;font-size:13px}
+.cm-card-title{font-size:13px;font-weight:500;margin-bottom:6px}
+.cm-card-q{font-size:12px;color:#6b6b67;margin-top:8px;font-style:italic}
+.cm-mid{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 0}
+.cm-arr{font-size:20px;color:#c0beb8}
+.cm-pill{font-size:11px;font-weight:500;padding:6px 12px;border-radius:99px;text-align:center}
+.cm-pill-purple{background:#EEEDFE;color:#3C3489}
+.cm-pill-red{background:#FCEBEB;color:#791F1F}
+.cm-result{border-radius:10px;padding:1rem 1.25rem;margin-top:16px;font-size:13px;font-weight:500;text-align:center}
+.cm-good{background:#EAF3DE;color:#27500A}
+.cm-bad{background:#FCEBEB;color:#791F1F}
+.cm-note{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid #e0ded8;font-size:13px;color:#444441;line-height:1.75}
+
+/* footer */
+.footer-note{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid #e0ded8;font-size:12px;color:#8b8b87}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>The Epistemic Stack</h1>
+<p class="subtitle">FLF Epistemic Case Study Competition — interactive pipeline explorer · V3.8</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('pipeline',this)">Pipeline</button>
+  <button class="tab" onclick="switchTab('context',this)">CONTEXT_MUTATION</button>
+</div>
+
+<!-- PIPELINE TAB -->
+<div id="panel-pipeline" class="panel active">
+
+  <div class="layer" onclick="toggle(this)">
+    <div class="layer-head"><div class="dot dot-gray"></div><div><div class="layer-name">Sources</div><div class="layer-tagline">papers · reports · debates · datasets</div></div><span class="chevron">▼</span></div>
+    <div class="layer-body">
+      <div class="item"><strong>No format constraints.</strong> Scientific papers (with DOI), arXiv preprints, government reports, blog posts, debate transcripts, and institutional documents all enter the same pipeline. Any source with a verifiable identifier is eligible.</div>
+      <span class="badge badge-gray">input: any textual source with DOI, arXiv ID, or URL</span>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-dn"></div></div>
+
+  <div class="layer" onclick="toggle(this)">
+    <div class="layer-head"><div class="dot dot-teal"></div><div><div class="layer-name">Ingestion layer</div><div class="layer-tagline">ACE extraction · Source Fidelity Check · Semantic Anchor Hierarchy</div></div><span class="chevron">▼</span></div>
+    <div class="layer-body">
+      <div class="item"><strong>ACE extraction:</strong> isolates one atomic claim element per node — a single falsifiable assertion, stripped of surrounding rhetoric and hedges.</div>
+      <div class="item"><strong>Source Fidelity Check <span class="code">source_fidelity.py</span>:</strong> automated 9-state taxonomy. First verifies identifier existence against Crossref and arXiv registries — a DOI or arXiv ID confirmed absent (HTTP 404) is flagged <span class="code">SOURCE_FABRICATED</span>; a check that fails for network reasons is reported as <span class="code">UNCERTAIN</span> instead, since an inconclusive check is not evidence of fabrication. Then fetches source text and uses an LLM to compare <span class="code">verbatim_claim</span> against it, producing verdicts from <span class="code">RETRIEVED_ALIGNED</span> to <span class="code">RETRIEVED_MISALIGNED</span>. Never modifies <span class="code">systemic_confidence_score</span> automatically — flags for curator review only.</div>
+      <div class="item"><strong>Run against real data on July 13, 2026:</strong> executing this against all 26 nodes with a live API key surfaced two implementation bugs, both fixed (a network-failure/confirmed-absence conflation that misreported real sources as fabricated, and a crash on empty API responses consistent with a safety refusal on genomic terminology). After the fix, of 26 nodes checked: no false fabrication flags; 2 blocked by API-level refusal; 10 returned SOURCE_UNREACHABLE (fetch failed outright); 12 returned UNCERTAIN (page retrieved but not its actual content — a related but distinct symptom of the same fetcher limitation); 1 node fully verified; 1 flagged for a discrepancy later found to be two-thirds a false positive on independent primary-source check. Full account in Part 5.1 of the written submission.</div>
+      <div class="item"><strong>Semantic Anchor Hierarchy:</strong> tags each claim with epistemic modality (empirical inductive, mechanism causal, observational correlational). Currently a manual annotation in the schema; not yet automated in the pipeline.</div>
+      <span class="badge badge-teal">scales with better LLM extraction capability</span>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-dn"></div></div>
+
+  <div class="layer" onclick="toggle(this)">
+    <div class="layer-head"><div class="dot dot-purple"></div><div><div class="layer-name">Structure layer</div><div class="layer-tagline">Typed DAG: SUPPORT · CONTRADICT · DEPEND · CONTEXT_MUTATION</div></div><span class="chevron">▼</span></div>
+    <div class="layer-body">
+      <div class="item"><strong>SUPPORT:</strong> claim A provides positive evidence for claim B.</div>
+      <div class="item"><strong>CONTRADICT:</strong> claims are in direct factual opposition — same question, conflicting answers.</div>
+      <div class="item"><strong>DEPEND:</strong> claim B's validity presupposes claim A. Used to trace shared methodological ancestry across sources that appear independent but ultimately rest on the same foundational claim or dataset.</div>
+      <div class="item"><strong>CONTEXT_MUTATION:</strong> claims agree on the underlying facts but construct structurally different causal narratives around them. Prevents false CONTRADICT edges for methodological frame mismatches. See the second tab for a worked example.</div>
+      <div class="item"><strong>Cycle detection:</strong> the DAG invariant is enforced at every compounding step. A proposed edge that would create a cycle is caught before activation and rolled back with a log entry.</div>
+      <span class="badge badge-purple">deterministic — no model dependency at runtime</span>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-dn"></div></div>
+
+  <div class="layer" onclick="toggle(this)">
+    <div class="layer-head"><div class="dot dot-coral"></div><div><div class="layer-name">Assessment layer</div><div class="layer-tagline">Crux Score · Z-score · CDI · ELM · Ag-Vacuum</div></div><span class="chevron">▼</span></div>
+    <div class="layer-body">
+      <div class="item"><strong>Crux Score:</strong> <span class="code">Cs = Σ(Dout × Wdep) + Σ(Econ)</span>. Contradiction edges are weighted by the contradicting source's peer scrutiny and confidence — not just counted. Wdep multipliers: peer-reviewed &amp; endorsed = 1.0, peer-reviewed = 0.9, gov oversight = 0.8, institutional report = 0.7, unreviewed preprint = 0.5, speculative = 0.3.</div>
+      <div class="item"><strong>Z-score pruning:</strong> <span class="code">Z = (Cs − μ) / σ</span> across all nodes in the same case graph. Nodes with Z &gt; 2.0 are flagged as critical. Adaptive threshold — scales to graph density instead of using an arbitrary fixed cutoff. In the current 26-node dataset, no node crosses this threshold in normal operation (COVID's highest is Z = +1.77), which is reported transparently rather than tuned to force a positive result.</div>
+      <div class="item"><strong>CDI — Contradiction Diversity Index:</strong> normalized entropy of the sources producing CONTRADICT edges toward a node. CDI ≈ 0 signals that all contradiction pressure originates from a single analyst (possible flooding); CDI ≈ 1 signals genuine independent criticism from multiple distinct sources.</div>
+      <div class="item"><strong>ELM / Prestige-to-Data Ratio:</strong> detects authority shielding — when a claim's evidential chain terminates in institutional prestige rather than primary empirical data. Currently a manually applied heuristic; not yet an automated classifier.</div>
+      <div class="item"><strong>Ag-Vacuum:</strong> identifies the single highest-leverage missing input — the gap whose resolution would most shift the graph's Crux Score distribution. Output is a specific, falsifiable pointer: "absence of pre-2019 WIV screening logs" rather than "more research is needed."</div>
+      <span class="badge badge-coral">scales with better reasoning models for LLM-assisted steps</span>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-dn"></div></div>
+
+  <div class="layer" onclick="toggle(this)">
+    <div class="layer-head"><div class="dot dot-amber"></div><div><div class="layer-name">Compounding layer</div><div class="layer-tagline">Multi-analyst merge · deduplication · cascading recalculation</div></div><span class="chevron">▼</span></div>
+    <div class="layer-body">
+      <div class="item"><strong>Proposed node:</strong> a second analyst submits a new ACE. The system checks Jaccard lexical similarity (default threshold 0.35) against all existing nodes before insertion — near-paraphrases are flagged as possible duplicates rather than silently added.</div>
+      <div class="item"><strong>Edge acceptance:</strong> pending edges activate only after cycle detection passes. The Crux Score and CDI of every downstream node are then recalculated and the changes logged with the proposing analyst's ID and a timestamp.</div>
+      <div class="item"><strong>Two-graph demo <span class="code">compounding_two_graphs.py</span>:</strong> merges Graph A (genomics + Rootclaim debate) with Graph B (Pekar 2022 molecular clock + WHO-China report). The merge produces a real deduplication flag (0.64 Jaccard on a Worobey near-paraphrase), a CONTEXT_MUTATION conflict on the WIV database interpretation, and cascading score recalculations. Both graphs were constructed by the same team from different starting sources — not by independent teams, which is noted as a limitation.</div>
+      <span class="badge badge-amber">scales with more contributors and more compute per verification step</span>
+    </div>
+  </div>
+
+  <div class="arrow-row"><div class="arrow-dn"></div></div>
+
+  <div class="layer" onclick="toggle(this)">
+    <div class="layer-head"><div class="dot dot-gray"></div><div><div class="layer-name">Knowledge artifact</div><div class="layer-tagline">structured · interrogable · extendable by any team</div></div><span class="chevron">▼</span></div>
+    <div class="layer-body">
+      <div class="item"><strong>Single source of truth:</strong> <span class="code">nodes_master.json</span> — document, code, and CLI all derive from this file. They cannot drift from each other. Verified with <span class="code">python3 -m epistemic_stack.cli verify-sync</span>.</div>
+      <div class="item"><strong>One-command summary:</strong> <span class="code">python3 -m epistemic_stack.cli summary</span> produces a ranked list of contested nodes with Crux Scores, Z-scores, and CDI in under one second from a clean clone with no setup beyond Python 3.10.</div>
+      <div class="item"><strong>Extendable:</strong> a second team proposes nodes via the compounding CLI without modifying the existing graph. The timestamped changelog records who proposed what and what the downstream effects were.</div>
+      <span class="badge badge-gray">26 source-verified nodes · 11 passing tests · zero external dependencies</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONTEXT_MUTATION TAB -->
+<div id="panel-context" class="panel">
+
+  <div class="cm-toggle">
+    <button class="tog on" onclick="showCM('with',this)">With CONTEXT_MUTATION</button>
+    <button class="tog" onclick="showCM('without',this)">Without it</button>
+  </div>
+
+  <div id="cm-with" class="cm-section active">
+    <p style="font-size:13px;color:#6b6b67;margin-bottom:1.25rem">Dietary eggs — same facts, two different questions</p>
+    <div class="cm-grid">
+      <div class="cm-card" style="border-color:#1D9E75">
+        <div class="cm-card-title">Study A — observational</div>
+        <div style="font-size:13px;color:#444">+7% all-cause mortality per extra egg per day in free-living populations</div>
+        <div class="cm-card-q">Question: what correlates with mortality at population scale?</div>
+      </div>
+      <div class="cm-mid">
+        <div class="cm-arr">↓</div>
+        <div class="cm-pill cm-pill-purple">CONTEXT_<br>MUTATION</div>
+        <div style="font-size:11px;color:#8b8b87;text-align:center">agree on data<br>different causal frame</div>
+        <div class="cm-arr">↓</div>
+      </div>
+      <div class="cm-card" style="border-color:#7F77DD">
+        <div class="cm-card-title">Study B — RCT</div>
+        <div style="font-size:13px;color:#444">Saturated fat is the primary driver of LDL elevation, not dietary cholesterol from eggs</div>
+        <div class="cm-card-q">Question: what causally drives LDL under controlled conditions?</div>
+      </div>
+    </div>
+    <div class="cm-result cm-good">Diagnosis: frame mismatch — no contested crux node, no open empirical dispute</div>
+    <div class="cm-note">
+      <strong>Structural consequence:</strong> no node in the eggs graph crosses the Z &gt; 2.0 threshold. The topology looks fundamentally different from the COVID case, where the highest Z-score node sits at +1.77 under genuine cross-source contradiction pressure. Same pipeline, different structural diagnosis — which is the generalisation result the system claims.
+    </div>
+  </div>
+
+  <div id="cm-without" class="cm-section">
+    <p style="font-size:13px;color:#6b6b67;margin-bottom:1.25rem">Without CONTEXT_MUTATION, only CONTRADICT is available</p>
+    <div class="cm-grid">
+      <div class="cm-card">
+        <div class="cm-card-title">Study A</div>
+        <div style="font-size:13px;color:#444">+7% mortality per extra egg per day</div>
+      </div>
+      <div class="cm-mid">
+        <div class="cm-arr">↓</div>
+        <div class="cm-pill cm-pill-red">CONTRADICT</div>
+        <div class="cm-arr">↓</div>
+      </div>
+      <div class="cm-card">
+        <div class="cm-card-title">Study B</div>
+        <div style="font-size:13px;color:#444">Saturated fat drives LDL, not eggs</div>
+      </div>
+    </div>
+    <div class="cm-result cm-bad">Misdiagnosis: "unresolved empirical dispute on egg safety" — incorrect and misleading</div>
+    <div class="cm-note">
+      <strong>Structural consequence:</strong> a CONTRADICT edge inflates the Crux Score of both nodes, making the eggs case appear structurally similar to the COVID origins dispute — a genuinely contested case where the evidence is ambiguous and the crux is unresolved. A downstream model or human investigator would be misled about the actual epistemic state.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">
+  The Epistemic Stack · ES-SUBMIT-2026-V3.8 · CbsNet Srl · github.com/[repo] ·
+  Run: <span style="font-family:monospace">python3 -m epistemic_stack.cli summary</span>
+</div>
+
+</div>
+<script>
+function switchTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+}
+function toggle(el){el.classList.toggle('open')}
+function showCM(which,btn){
+  document.querySelectorAll('.tog').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.cm-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('cm-'+which).classList.add('active');
+}
+</script>
+</body>
+</html>
