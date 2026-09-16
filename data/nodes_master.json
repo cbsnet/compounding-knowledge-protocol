@@ -1,0 +1,812 @@
+{
+  "document_meta": {
+    "title": "The Epistemic Stack — Consolidated Node Reference",
+    "version": "1.0",
+    "last_verified": "2026-07-01",
+    "verification_method": "Live web search and direct fetch against primary sources; no node included without independently checked DOI, arXiv ID, or institutional document identifier.",
+    "purpose": "Single source of truth for the FLF final submission (due 2026-07-19). All figures in the written spec, the standalone HTML/JS prototype, and any presentation site must derive from this file rather than being re-authored independently, to avoid drift between artifacts."
+  },
+  "schema_notes": {
+    "ace_id": "Unique identifier, format ACE-{CASE}-{SHORT-DESCRIPTOR}",
+    "systemic_confidence_score": "0.0-1.0, calibrated relative to other nodes in the same case graph. Not an absolute truth probability — a function of source peer-review status, replication, and methodological scrutiny received.",
+    "vector_type": "SUPPORT | CONTRADICT | DEPEND | CONTEXT_MUTATION (ConMut)",
+    "peer_scrutiny_status": "Controlled vocabulary: peer_reviewed | peer_reviewed_and_independently_endorsed | unreviewed_preprint | unreviewed_preprint_self_flagged_speculative | institutional_report | government_oversight_document",
+    "wdep_specification": {
+      "name": "Wdep — Dependency Weight, operational definition",
+      "added_in_response_to": "External supervisor review flagging that Wdep in the Crux Score formula (Cs = Sum(Dout x Wdep) + Sum(Econ)) was referenced but never operationally defined, making Cs non-reproducible.",
+      "definition": "Wdep for a given DEPEND edge from node A to node B is computed from fields the target node B already carries in this reference file, not from a separately assigned weight. This keeps the formula auditable: anyone with the node JSON can recompute Wdep without consulting an external weighting table.",
+      "formula": "Wdep(A -> B) = peer_scrutiny_multiplier(B) x systemic_confidence_score(B)",
+      "peer_scrutiny_multiplier_scale": {
+        "peer_reviewed_and_independently_endorsed": 1.0,
+        "peer_reviewed": 0.9,
+        "government_oversight_document": 0.8,
+        "structured_adjudication_by_domain_experts": 0.8,
+        "institutional_report": 0.7,
+        "unreviewed_preprint": 0.5,
+        "unreviewed_preprint_self_flagged_speculative": 0.3,
+        "self-published_post-hoc_rebuttal": 0.25,
+        "primary_source_documented_dispute": 0.4,
+        "directly_observable_from_primary_source": 1.0
+      },
+      "worked_examples": [
+        {
+          "edge": "ACE-SARS2-VOID-WIV -> ACE-SARS2-GENOME-FCS",
+          "calculation": "Wdep = peer_scrutiny_multiplier(unreviewed_preprint=0.5) x confidence(0.35) = 0.175",
+          "interpretation": "Low weight: the EDV node depends on a target whose own confidence and review status are both weak, so this dependency contributes little structural weight to any node depending on it in turn."
+        },
+        {
+          "edge": "ACE-SARS2-SIXFOLD-VARIANCE -> ACE-SARS2-JUDGE-CONSENSUS",
+          "calculation": "Wdep = peer_scrutiny_multiplier(structured_adjudication_by_domain_experts=0.8) x confidence(0.81) = 0.648",
+          "interpretation": "High weight: this dependency rests on a well-scrutinized, high-confidence target, so it contributes substantially to the Crux Score of any node depending on it."
+        }
+      ],
+      "rationale": "This makes Wdep a function of properties already required elsewhere in the schema (systemic_confidence_score, peer_scrutiny_status) rather than an independently chosen number, eliminating a second arbitrary parameter in the same formula that the Z-score correction already addressed once. The peer_scrutiny_multiplier scale is itself an explicit, inspectable design choice rather than a hidden one — it is provided here precisely so it can be challenged or recalibrated.",
+      "known_limitation": "The multiplier scale above is a reasonable first-pass ordinal ranking (peer-reviewed-and-endorsed > peer-reviewed > government document > institutional report > preprint > self-flagged speculative > post-hoc rebuttal), not an empirically validated weighting. This is flagged in the submission's limitations section rather than presented as settled."
+    }
+  },
+  "case_covid": {
+    "case_label": "COVID-19 origins dispute",
+    "discourse_id": "DISC-LAB-ORIGIN-THEORY",
+    "structural_note": "Open, unresolved adversarial debate. Crux node remains high-tension over multi-year timescale.",
+    "nodes": [
+      {
+        "ace_id": "ACE-SARS2-GENOME-FCS",
+        "verbatim_claim": "The restriction site fingerprint of SARS-CoV-2 is anomalous and indicates a synthetic assembly process based on BsaI/BsmBI endonuclease cloning frameworks.",
+        "source": {
+          "title": "Endonuclease fingerprint indicates a synthetic origin of SARS-CoV-2",
+          "authors": [
+            "Bruttel, V.",
+            "Washburne, A. F.",
+            "VanDongen, A. M. J."
+          ],
+          "publication_date": "2022-10-20",
+          "venue": "bioRxiv",
+          "doi_or_id": "10.1101/2022.10.18.512756",
+          "status": "Preprint — disputed peer-review trajectory",
+          "version_note": "This DOI has two distinct bioRxiv versions: v1 posted 2022-10-20 (cited here, matching the date the case material and Hensel's 2025 critique both reference) and v2 posted 2023-04-11 with revised text. Flagged explicitly after external review correctly noted the dating could otherwise read as ambiguous."
+        },
+        "context_bounding": {
+          "epistemic_modality": "contested_empirical_hypothesis",
+          "linguistic_hedges": [
+            "indicates",
+            "suggests a synthetic origin"
+          ]
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.35,
+          "peer_scrutiny_status": "unreviewed_preprint",
+          "rationale": "Statistical rarity claim later shown to contain a methodological error (see ACE-SARS2-GENOME-FCS-CRITIQUE) that overstates anomaly by ~60x. Affiliation of authors shares institution with one critique source — see institutional_note on that node."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-GENOME-FCS-CRITIQUE",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-SARS2-GENOME-FCS",
+        "verbatim_claim": "The BsaI/BsmBI restriction site pattern of SARS-CoV-2 falls within the expected distribution of natural sarbecovirus evolution; Bruttel et al. contain technical errors reducing apparent rarity roughly 60-fold (0.07% reported vs. ~4.2% actual).",
+        "source": {
+          "title": "On the distributions of restriction sites in human and pangolin sarbecoviruses",
+          "authors": [
+            "Hensel, Z."
+          ],
+          "publication_date": "2025-10",
+          "venue": "arXiv",
+          "doi_or_id": "arXiv:2510.23833",
+          "status": "Preprint under review"
+        },
+        "secondary_sources": [
+          {
+            "title": "Updated analysis to reject the laboratory-engineering hypothesis of SARS-CoV-2",
+            "venue": "PMC",
+            "doi_or_id": "PMC9937728",
+            "publication_date": "2023-02-18",
+            "status": "Peer-reviewed"
+          },
+          {
+            "title": "Public statement on Bruttel et al. preprint evaluation",
+            "institution": "University of Würzburg",
+            "publication_date": "2022-10-26",
+            "status": "Institutional statement",
+            "institutional_note": "Source institution shares affiliation with the primary author of ACE-SARS2-GENOME-FCS. Flagged for transparency, not excluded — same-institution critique can be either a credibility signal (colleagues distancing) or a conflict signal; the system does not resolve this automatically and surfaces both readings."
+          }
+        ],
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.68,
+          "peer_scrutiny_status": "unreviewed_preprint",
+          "rationale": "Primary refutation source is itself an unreviewed preprint, so confidence is capped below 'high' despite strong secondary peer-reviewed support."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-EPID-MARKET",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-SARS2-GENOME-FCS",
+        "verbatim_claim": "The spatial clustering of the earliest known COVID-19 cases in December 2019 strictly centres around the Huanan Seafood Market, specifically near wildlife stalls.",
+        "source": {
+          "title": "The Huanan Seafood Wholesale Market in Wuhan was the early epicenter of the COVID-19 pandemic",
+          "authors": [
+            "Worobey, M.",
+            "et al."
+          ],
+          "publication_date": "2022",
+          "venue": "Science",
+          "doi_or_id": "10.1126/science.abp8715",
+          "status": "Peer-reviewed"
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.74,
+          "peer_scrutiny_status": "peer_reviewed"
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-VOID-WIV",
+        "vector_type": "DEPEND",
+        "vector_target": [
+          "ACE-SARS2-GENOME-FCS",
+          "ACE-SARS2-EPID-MARKET"
+        ],
+        "node_class": "epistemic_deficit_vector",
+        "verbatim_claim": "The Wuhan Institute of Virology's database of bat coronavirus sequences and screening logs was taken offline in September 2019, months before the pandemic was identified, and pre-2019 records remain absent from peer-reviewed literature.",
+        "source": {
+          "title": "An Analysis of the Origins of the COVID-19 Pandemic: Interim Report",
+          "institution": "United States Senate HELP Committee",
+          "publication_date": "2022",
+          "status": "Government oversight document — minority (Republican) staff interim report, not a bipartisan committee finding",
+          "authors": [
+            "Senate HELP Committee Minority Oversight Staff"
+          ]
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.91,
+          "peer_scrutiny_status": "government_oversight_document",
+          "rationale": "High score reflects certainty that the data gap exists and is documented, not certainty about what the missing data would show."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-JUDGE-CONSENSUS",
+        "vector_type": "SUPPORT",
+        "vector_target": "ACE-SARS2-EPID-MARKET",
+        "verbatim_claim": "Both judges in the Rootclaim-moderated $100,000 debate, evaluating roughly 15-20 hours of structured argument across three video-conference sessions, independently ruled in favor of the zoonotic origin hypothesis.",
+        "source": {
+          "title": "Practically-A-Book Review: Rootclaim $100,000 Lab Leak Debate",
+          "authors": [
+            "Alexander, S."
+          ],
+          "publication_date": "2024-03-28",
+          "venue": "Astral Codex Ten",
+          "doi_or_id": "astralcodexten.com/p/practically-a-book-review-rootclaim",
+          "status": "Primary case-material writeup, explicitly named in the FLF competition brief as core case material"
+        },
+        "context_bounding": {
+          "epistemic_modality": "structured_adjudicated_judgment",
+          "nuance_preservation_notes": "Judges were Will van Treuren (PhD Stanford, bacteriology/immunology background) and Eric Stansifer (PhD MIT, mathematical virology). Both explicitly cautioned in their written decisions that their probabilistic/Bayesian calculations were a supplement to, not the basis of, their reasoning. Judge Eric: the Bayesian calculation's appropriateness as a method was itself in doubt even to him. Judge Will: explicitly skeptical that Bayesian methods are more 'objective' than intuitive reasoning, calling them more 'legible' rather than more accurate. Corrected 2026-06-21 after citation cross-checking: an earlier version of this node stated '~100 hours', which was a real numeric error -- multiple sources (Scott Alexander's writeup, the judges' own decision page, and the FLF competition brief itself) independently state 15-20 hours. See cross_check_results.json.",
+          "judge_decision_links": {
+            "judge_will": "drive.google.com/file/d/1YhmkYB32RpGsXvQTsX4xZ0Yul1wiwh8Z/view",
+            "judge_eric": "drive.google.com/file/d/1aHlhPd-16EOabzXhiajT5PBm3uVCAG3T/view"
+          }
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.81,
+          "peer_scrutiny_status": "structured_adjudication_by_domain_experts",
+          "rationale": "Two independent domain-expert judges reaching the same conclusion via partly differing reasoning paths is meaningfully stronger than either judgment alone, but this is adjudication of a specific debate's evidence presentation, not a peer-reviewed scientific consensus."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-WEISSMAN-BAYESIAN",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-SARS2-JUDGE-CONSENSUS",
+        "verbatim_claim": "An independent Bayesian analysis of the same evidence base, conducted separately from the Rootclaim debate process, concludes in favor of laboratory origin.",
+        "source": {
+          "title": "An Inconvenient Probability",
+          "authors": [
+            "Weissman, M."
+          ],
+          "publication_date": "2023-2024",
+          "venue": "Substack (michaelweissman.substack.com)",
+          "doi_or_id": "michaelweissman.substack.com/p/an-inconvenient-probability-v50",
+          "status": "Independent analysis, not peer-reviewed, explicitly cited in the FLF brief as 'an example of a more rigorous independent analysis'"
+        },
+        "context_bounding": {
+          "epistemic_modality": "independent_bayesian_reanalysis",
+          "nuance_preservation_notes": "Scott Alexander's writeup explicitly states he did not incorporate Weissman's analysis into his comparison table because translating Weissman's framework into the table's categories 'would have taken too long.' This is a structural ingestion gap in the primary case writeup itself, not a flaw in Weissman's analysis — exactly the kind of cross-source claim alignment problem the Ingestion layer's ACE/SAH architecture is designed to solve, since Weissman uses a different category scheme than Peter, Saar, and the judges. Note: Weissman's analysis also engages with and partially relies on the Bruttel restriction-site argument (ACE-SARS2-GENOME-FCS) -- a real relational link identified during citation cross-checking on 2026-06-21. This is NOT mapped as a graph edge because the current schema only supports one vector_type per node, and this node's relationship to GENOME-FCS (support) is logically opposite to its relationship to JUDGE-CONSENSUS (contradict). Representing both correctly requires a multi-edge schema extension, which is listed as a structural limitation in Part 5 of the written submission rather than worked around with an inaccurate single edge."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.55,
+          "peer_scrutiny_status": "unreviewed_independent_analysis",
+          "rationale": "Methodologically serious (cited approvingly by FLF itself as a 'rigorous' example) but a single-author analysis without independent replication, reaching the minority conclusion among the six comparable Bayesian estimates referenced in the case material."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-SIXFOLD-VARIANCE",
+        "vector_type": "DEPEND",
+        "vector_target": [
+          "ACE-SARS2-JUDGE-CONSENSUS",
+          "ACE-SARS2-WEISSMAN-BAYESIAN"
+        ],
+        "node_class": "epistemic_calibration_node",
+        "verbatim_claim": "Six independent Bayesian analyses of the same underlying evidence base, produced by Peter Miller, Saar Wilf (the two debaters), the two judges, Scott Alexander himself, and Daniel Filan, span twenty-three orders of magnitude in final odds; removing Peter Miller alone (whose extreme estimate the author treats as largely rhetorical) narrows the spread to roughly seven orders of magnitude among the remaining five.",
+        "source": {
+          "title": "Practically-A-Book Review: Rootclaim $100,000 Lab Leak Debate",
+          "authors": [
+            "Alexander, S."
+          ],
+          "publication_date": "2024-03-28",
+          "venue": "Astral Codex Ten",
+          "status": "Primary case-material writeup, explicitly referenced in the FLF competition brief itself",
+          "url": "https://www.astralcodexten.com/p/practically-a-book-review-rootclaim"
+        },
+        "context_bounding": {
+          "epistemic_modality": "meta_analytical_observation",
+          "nuance_preservation_notes": "This is the FLF brief's own headline justification for selecting this case ('Six independent Bayesian analyses of the same evidence spanned 23 orders of magnitude'). Corrected 2026-06-21 after citation cross-checking against the primary source found the original node description of 'four non-participant analyses' did not match the source, which instead describes removing Peter Miller alone as the key comparison point. See cross_check_results.json."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.95,
+          "peer_scrutiny_status": "directly_observable_from_primary_source",
+          "rationale": "This is a descriptive fact about the dispersion of expert estimates, not a claim about the underlying truth of either hypothesis — high confidence reflects that it is directly counted and reported in the primary source, not a probabilistic judgment about origins."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-ROOTCLAIM-HSM-REBUTTAL",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-SARS2-EPID-MARKET",
+        "verbatim_claim": "Rootclaim's post-debate response argues that the conditional probability of the Huanan Seafood Market cluster occurring under zoonotic origin was previously underestimated, and that correcting for this single factor is sufficient to shift the balance of evidence back toward laboratory origin.",
+        "source": {
+          "title": "Rootclaim's COVID-19 Origins Debate Results",
+          "authors": [
+            "Wilf, S.",
+            "Rootclaim team"
+          ],
+          "publication_date": "2024",
+          "venue": "Rootclaim blog",
+          "doi_or_id": "blog.rootclaim.com/rootclaims-covid-19-origins-debate-results/",
+          "status": "Primary case-material response document, explicitly named in the FLF brief as 'Rootclaim's response'"
+        },
+        "context_bounding": {
+          "epistemic_modality": "post-hoc_rebuttal_with_revised_estimate",
+          "nuance_preservation_notes": "Rootclaim's own framing distinguishes between two probabilities being conflated: the conditional probability of market clustering given lab leak versus the conditional probability of market clustering given zoonosis. Rootclaim's revised estimate after the debate placed the latter below 0.03, used to argue the market evidence is 'negligible' rather than decisive. This rebuttal was issued after losing the debate and after the judges' verdicts, and Rootclaim's overall probability estimate for lab leak increased rather than decreased following the debate — a detail worth flagging precisely because it runs against the directional expectation that losing a structured debate should lower confidence."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.3,
+          "peer_scrutiny_status": "self-published_post-hoc_rebuttal",
+          "rationale": "Issued by the losing party after the verdict, revising the loser's own prior estimate upward rather than downward, which the system flags as a pattern worth surfacing rather than penalizing automatically — post-hoc revision is not inherently illegitimate, but the direction here is a relevant transparency signal for a human reviewer."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-LINEAGE-AB-DISPUTE",
+        "vector_type": "CONTEXT_MUTATION",
+        "vector_links": [
+          "ACE-SARS2-EPID-MARKET",
+          "ACE-SARS2-GENOME-FCS"
+        ],
+        "verbatim_claim": "Early COVID genomic samples split into two lineages (A and B) differing by two mutations; Lineage A is evolutionarily closer to the nearest known bat relative (BANAL-52) and should logically have appeared first, yet the earliest and most numerous market-linked cases were Lineage B. More recent data (Liu et al. 2024) has since detected both lineages at the market itself, complicating the original single-lineage framing without resolving which causal story -- pre-market spread versus a double zoonotic event -- best explains the pattern.",
+        "mutation_logic": "Both debate sides agree on the underlying genomic fact pattern (Lineage A is ancestral, Lineage B dominates early market-linked cases). The dispute is not about this fact but about which causal story it is evidence for: one frame treats it as evidence the market was downstream of an earlier, undetected lab-linked spread (lab leak frame); the other frame treats it as evidence of a double zoonotic spillover event with two separately infected animals at the market (zoonotic frame). This is a genuine CONTEXT_MUTATION case within the COVID dispute itself, not only between the COVID and eggs cases — both frames are consistent with the same underlying sequencing data, and the disagreement is about inference structure, not raw fact.",
+        "source": {
+          "title": "Practically-A-Book Review: Rootclaim $100,000 Lab Leak Debate (Session 1.5: Lineages)",
+          "authors": [
+            "Alexander, S.",
+            "Deigin, Y. (lab leak position)",
+            "Miller, P. (zoonotic position)"
+          ],
+          "publication_date": "2024-03-28",
+          "venue": "Astral Codex Ten",
+          "url": "https://www.astralcodexten.com/p/practically-a-book-review-rootclaim"
+        },
+        "resolution_note": "Neither frame is privileged by the system; this node exists specifically to demonstrate that CONTEXT_MUTATION is not a tool reserved for cross-case comparisons (as in the eggs case) but applies within a single adversarial debate whenever two sides agree on data but structure competing causal narratives around it.",
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.5,
+          "peer_scrutiny_status": "primary_source_documented_dispute",
+          "rationale": "Score reflects that this node captures a structural disagreement rather than asserting either causal story is correct; both Pekar et al. (2022, Science) and Pipes et al. (2021) are cited within the source material as supporting the zoonotic framing via molecular clock analysis, which should be added as a dependency once independently verified."
+        }
+      },
+      {
+        "ace_id": "ACE-SARS2-EPID-MARKET-CRITIQUE",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-SARS2-EPID-MARKET",
+        "verbatim_claim": "The statistical methodology used to conclude the Huanan Market was the epicenter is invalid on two grounds: the assumption that a centroid of early case locations marks the outbreak origin is unproven, and the Monte Carlo test used to rule out other locations is methodologically flawed.",
+        "source": {
+          "title": "Statistics did not prove that the Huanan Seafood Wholesale Market was the early epicentre of the COVID-19 pandemic",
+          "authors": [
+            "Stoyan, D.",
+            "Chiu, S. N."
+          ],
+          "publication_date": "2024",
+          "venue": "Journal of the Royal Statistical Society Series A: Statistics in Society",
+          "volume_issue": "187(3), 710-715",
+          "url": "https://academic.oup.com/jrsssa/article/187/3/710/7557954",
+          "status": "Peer-reviewed statistical critique"
+        },
+        "secondary_sources": [
+          {
+            "title": "Confirmation of the centrality of the Huanan market among early COVID-19 cases: Reply to Stoyan and Chiu (2024)",
+            "authors": [
+              "Worobey, M.",
+              "et al."
+            ],
+            "publication_date": "2024-03",
+            "venue": "arXiv preprint",
+            "arxiv_id": "arXiv:2403.05859",
+            "url": "https://arxiv.org/abs/2403.05859",
+            "status": "Direct rebuttal by the original authors, posted on arXiv March 2024",
+            "note": "Worobey et al. directly contested Stoyan and Chiu's statistical critique, arguing that SC2024's premise (that the centroid of case locations must coincide with the exact transmission origin point) is erroneous, and that their bootstrapping method therefore cannot invalidate the original spatial analysis. The existence of this rebuttal transforms this node from 'published critique without response' to 'active methodological dispute between the original authors and the critics' — a structurally stronger reason to represent both positions in the graph rather than treating Worobey's conclusion as unchallenged."
+          }
+        ],
+        "context_bounding": {
+          "nuance_preservation_notes": "Added 2026-06-21 after citation cross-checking found the system had applied a satellite-critique pattern to ACE-SARS2-GENOME-FCS (Bruttel) but not symmetrically to this comparably-contested node, which is an inconsistency in even-handedness the system aims for. Note this critique targets statistical METHODOLOGY, not the underlying spatial data itself -- it does not claim the market was uninvolved, only that the specific statistical proof of centrality is invalid. Updated 2026-06-22 to add secondary_sources: Worobey et al. published a direct arXiv rebuttal to Stoyan and Chiu (arXiv:2403.05859, March 2024), contesting the statistical premise of the critique. This does not reduce the validity of this node — a critique that received a direct, dated, point-by-point response from the original authors is a stronger signal of genuine methodological tension than a critique that went unaddressed."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.55,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Published in a respected statistics journal (Royal Statistical Society Series A) specifically contesting the Monte Carlo methodology, which is a serious methodological challenge. Score is below ALIGNED-tier nodes because it is a single critique paper against an extensively-replicated, multi-author Science paper with substantial additional epidemiological and genomic evidence beyond just the spatial statistics being contested here."
+        }
+      }
+    ]
+  },
+  "case_eggs": {
+    "case_label": "Dietary eggs and cardiovascular risk",
+    "discourse_id": "DISC-EGG-CVD-RISK",
+    "structural_note": "Apparent contradiction resolves substantially into a frame mismatch (population correlation vs. isolated causal mechanism) rather than a factual dispute — this is the case selected to demonstrate the CONTEXT_MUTATION vector and differentiate the system from binary CONTRADICT mapping.",
+    "nodes": [
+      {
+        "ace_id": "ACE-EGG-MORTALITY-DOSE",
+        "verbatim_claim": "Each additional egg per day is associated with a 7% higher risk of all-cause mortality and 13% higher risk of cancer mortality; no significant association found with CVD mortality specifically.",
+        "source": {
+          "title": "Egg and Dietary Cholesterol Intake and Risk of All-Cause, Cardiovascular, and Cancer Mortality: A Systematic Review and Dose-Response Meta-Analysis of Prospective Cohort Studies",
+          "authors": [
+            "Mofrad, M. D.",
+            "Naghshi, S.",
+            "Lotfi, K.",
+            "et al."
+          ],
+          "publication_date": "2022-05-27",
+          "venue": "Frontiers in Nutrition",
+          "doi_or_id": "10.3389/fnut.2022.878979",
+          "status": "Peer-reviewed"
+        },
+        "context_bounding": {
+          "epistemic_modality": "dose_response_association",
+          "nuance_preservation_notes": "Pooled from 55 prospective cohort studies, n=2,772,486. CVD mortality specifically: RR 1.00 (CI 0.92-1.09) — not significant. Only all-cause and cancer mortality showed positive association. High heterogeneity (I²=84.8%)."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.58,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Large pooled sample but high heterogeneity across included studies limits confidence."
+        }
+      },
+      {
+        "ace_id": "ACE-EGG-UMBRELLA-LOWQUALITY",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-EGG-MORTALITY-DOSE",
+        "verbatim_claim": "Evidence regarding egg consumption and cardiovascular outcomes is of critically low strength; insufficient evidence exists to discourage egg consumption, and eggs can be part of a healthy diet.",
+        "source": {
+          "title": "Effect of egg consumption on health outcomes: An updated umbrella review of systematic reviews and meta-analysis of observational and intervention studies",
+          "authors": [
+            "Formisano, E.",
+            "Lopes Neri, L. C.",
+            "Caffa, I.",
+            "et al."
+          ],
+          "publication_date": "2025-05",
+          "venue": "Nutrition, Metabolism and Cardiovascular Diseases",
+          "volume_issue": "35(5), 103849",
+          "doi_or_id": "10.1016/j.numecd.2025.103849",
+          "status": "Peer-reviewed",
+          "note": "Online-first 2025-01-03; formal issue date 2025-05."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.61,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "This is an umbrella review (review of reviews) — it grades the quality of prior meta-analyses rather than producing new primary data. Does not directly falsify ACE-EGG-MORTALITY-DOSE's pooled estimate; it challenges the evidentiary weight that estimate should carry."
+        }
+      },
+      {
+        "ace_id": "ACE-EGG-LDL-RCT",
+        "verbatim_claim": "In a randomized cross-over design isolating dietary cholesterol from saturated fat, saturated fat intake was the stronger independent driver of LDL cholesterol levels compared to dietary cholesterol from eggs.",
+        "source": {
+          "title": "Impact of dietary cholesterol from eggs and saturated fat on LDL cholesterol levels: a randomized cross-over study",
+          "authors": [
+            "Carter, S.",
+            "Hill, A. M.",
+            "Yandell, C.",
+            "Wood, L.",
+            "Coates, A. M.",
+            "Buckley, J. D."
+          ],
+          "publication_date": "2025-07 (Epub 2025-05-06)",
+          "venue": "American Journal of Clinical Nutrition",
+          "volume_issue": "122(1), 83-91",
+          "doi_or_id": "10.1016/j.ajcnut.2025.05.001",
+          "status": "Peer-reviewed, randomized controlled trial",
+          "registered_protocol": {
+            "title": "Study protocol for a 15-week randomised controlled trial assessing the independent effects of high-cholesterol and high-saturated fat diets on LDL cholesterol",
+            "venue": "BMJ Open",
+            "doi_or_id": "10.1136/bmjopen-2023-081664",
+            "publication_date": "2024-01-25"
+          }
+        },
+        "context_bounding": {
+          "nuance_preservation_notes": "Protocol pre-registered 16 months before results publication, reducing risk of outcome-switching or p-hacking. Trial conducted at University of South Australia, n per registered protocol."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.79,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "RCT with pre-registered protocol; highest methodological tier among the eggs nodes, but a single trial, not yet replicated."
+        }
+      },
+      {
+        "ace_id": "CONMUT-EGG-SATURATED-FAT-CONFOUND",
+        "vector_type": "CONTEXT_MUTATION",
+        "vector_links": [
+          "ACE-EGG-MORTALITY-DOSE",
+          "ACE-EGG-LDL-RCT"
+        ],
+        "mutation_logic": "ACE-EGG-MORTALITY-DOSE is drawn from observational cohorts where egg consumption correlates with co-occurring dietary patterns (saturated fat, processed meat intake) — it answers 'what correlates with mortality in free-living populations.' ACE-EGG-LDL-RCT isolates dietary cholesterol from saturated fat under controlled conditions — it answers 'what causally drives LDL when intake is controlled.' The apparent tension between a positive mortality association and a null/attenuated causal LDL effect is not a factual contradiction between the two studies; it is a frame mismatch between population-correlational and mechanism-causal questions.",
+        "resolution_note": "Both claims are retained as valid within their respective frames. The CONTRADICT vector is deliberately NOT applied here — applying it would flatten a methodological distinction into a false binary, which is the specific failure mode this vector type is designed to avoid.",
+        "crux_relevance": "This node is the actual crux of the eggs case, not either of the two object-level claims. It is supported by the cited literature's own discussion sections, which independently note that confounding by co-occurring nutrients explains much of the conflicting literature (see ACE-EGG-CRUX-ACKNOWLEDGEMENT)."
+      },
+      {
+        "ace_id": "ACE-EGG-CRUX-ACKNOWLEDGEMENT",
+        "verbatim_claim": "The overall health effects are likely to reflect the interactions of cholesterol with other nutrients in eggs, which explains the conflicting results reported across studies.",
+        "source": {
+          "title": "Egg and Dietary Cholesterol Intake and Risk of Mortality (discussion section)",
+          "doi_or_id": "10.3389/fnut.2022.878979"
+        },
+        "context_bounding": {
+          "nuance_preservation_notes": "This is the source authors' own acknowledgment that confounding by co-occurring nutrients and dietary patterns, not eggs in isolation, is the operative crux."
+        },
+        "crux_score_contribution": "high — out-degree 3, dependency target for both the mortality-dose node and the context-mutation node",
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.66,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Derived from the discussion section of a peer-reviewed meta-analysis rather than its primary pooled estimate; treated as a lower-stakes interpretive claim by the source authors themselves, not as a separately tested hypothesis."
+        }
+      },
+      {
+        "ace_id": "ACE-EGG-DIABETES-RISK-SHIN",
+        "vector_type": "CONTEXT_MUTATION",
+        "vector_links": [
+          "ACE-EGG-MORTALITY-DOSE"
+        ],
+        "verbatim_claim": "Egg consumption shows no association with cardiovascular disease or stroke in the general population, but is associated with a 42% higher risk of type 2 diabetes in the general population and a 69% higher risk of cardiovascular disease specifically among individuals already diagnosed with diabetes.",
+        "source": {
+          "title": "Egg consumption in relation to risk of cardiovascular disease and diabetes: a systematic review and meta-analysis",
+          "authors": [
+            "Shin, J. Y.",
+            "Xun, P.",
+            "Nakamura, Y.",
+            "He, K."
+          ],
+          "publication_date": "2013-07",
+          "venue": "American Journal of Clinical Nutrition",
+          "volume_issue": "98(1), 146-159",
+          "doi_or_id": "10.3945/ajcn.112.051318",
+          "status": "Peer-reviewed, meta-analysis of 22 cohorts"
+        },
+        "context_bounding": {
+          "epistemic_modality": "subpopulation_dependent_association",
+          "nuance_preservation_notes": "Pooled HR 1.42 (95% CI 1.09-1.86) for type 2 diabetes incidence in general population; pooled HR 1.69 (95% CI 1.09-2.62) for CVD specifically among diabetic patients. The CVD-null finding in the general population (HR 0.96) and the diabetic-subgroup CVD finding (HR 1.69) are NOT in contradiction — they answer different questions about different populations. This is precisely the kind of population-dependent heterogeneity the competition brief asks about directly ('Does it vary across people, and what predicts this?')."
+        },
+        "mutation_logic": "ACE-EGG-MORTALITY-DOSE reports general-population associations. This node shows the same evidence base, examined by subgroup, reveals a materially different risk profile for diabetic individuals than for the general population. Treating Shin et al.'s diabetic-subgroup finding as simply 'confirming' or 'contradicting' the general-population mortality finding would erase the population-conditional structure that is the actual finding.",
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.64,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Large pooled meta-analysis (22 cohorts, n=1,600-90,735 per cohort) with a biologically coherent subgroup pattern, but the diabetic-subgroup estimate is based on fewer studies than the general-population estimate, and a 2022 follow-up (Drouin-Chartier et al., AJCN) found smaller, cohort-dependent diabetes associations (14% higher risk, significant only in female cohorts), suggesting genuine residual heterogeneity rather than a settled dose-response relationship."
+        }
+      },
+      {
+        "ace_id": "ACE-EGG-TMAO-MECHANISM",
+        "vector_type": "SUPPORT",
+        "vector_target": "ACE-EGG-MORTALITY-DOSE",
+        "verbatim_claim": "Dietary phosphatidylcholine from eggs is metabolized by intestinal gut flora into trimethylamine-N-oxide (TMAO); elevated plasma TMAO is independently associated with increased risk of major adverse cardiovascular events.",
+        "source": {
+          "title": "Gut flora metabolism of phosphatidylcholine promotes cardiovascular disease",
+          "authors": [
+            "Wang, Z.",
+            "Klipfell, E.",
+            "Bennett, B. J.",
+            "et al."
+          ],
+          "publication_date": "2011",
+          "venue": "Nature",
+          "volume_issue": "472, 57-63",
+          "doi_or_id": "10.1038/nature09922",
+          "status": "Peer-reviewed, foundational mechanistic study"
+        },
+        "secondary_sources": [
+          {
+            "title": "Intestinal Microbial Metabolism of Phosphatidylcholine and Cardiovascular Risk",
+            "authors": [
+              "Tang, W. H. W.",
+              "Wang, Z.",
+              "Levison, B. S.",
+              "et al."
+            ],
+            "venue": "New England Journal of Medicine",
+            "doi_or_id": "10.1056/NEJMoa1109400",
+            "publication_date": "2013-04-25",
+            "status": "Peer-reviewed, human cohort follow-up (n=4007); used two hard-boiled eggs as the phosphatidylcholine challenge substrate"
+          }
+        ],
+        "context_bounding": {
+          "epistemic_modality": "mechanistic_pathway_with_human_cohort_support",
+          "nuance_preservation_notes": "The 2013 NEJM human study used eggs specifically as the dietary challenge substrate (two hard-boiled eggs plus deuterium-labeled phosphatidylcholine), making it among the more direct mechanistic links from egg consumption specifically, not just choline-containing foods generally, to a measurable cardiovascular risk biomarker."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.74,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Foundational Nature paper (3,600+ citations) plus a direct human cohort replication in NEJM specifically using eggs as substrate. Confidence is not higher because the causal sufficiency of TMAO elevation alone (independent of the renal function and gut microbiome composition that affect TMAO levels) remains contested — see ACE-EGG-TMAO-CONFOUND below."
+        }
+      },
+      {
+        "ace_id": "ACE-EGG-TMAO-CONFOUND",
+        "vector_type": "CONTEXT_MUTATION",
+        "vector_links": [
+          "ACE-EGG-TMAO-MECHANISM"
+        ],
+        "verbatim_claim": "In a large multi-ethnic cohort, the association between plasma TMAO and incident cardiovascular events was substantially attenuated after adjusting for estimated glomerular filtration rate (eGFR), suggesting reduced kidney function may be a mediator or confounder in the TMAO-cardiovascular risk pathway rather than TMAO acting as an independent risk factor in isolation.",
+        "source": {
+          "title": "Trimethylamine-N-oxide (TMAO) and risk of incident cardiovascular events in the Multi-Ethnic Study of Atherosclerosis",
+          "authors": [
+            "Budoff, M. J.",
+            "de Oliveira Otto, M. C.",
+            "Li, X. S.",
+            "et al."
+          ],
+          "publication_date": "2025",
+          "venue": "Scientific Reports (Nature)",
+          "volume_issue": "15, 23362",
+          "doi_or_id": "10.1038/s41598-025-05903-3",
+          "status": "Peer-reviewed, n=6,767, multi-ethnic prospective cohort"
+        },
+        "mutation_logic": "ACE-EGG-TMAO-MECHANISM frames TMAO as a relatively direct biomarker linking egg/choline intake to cardiovascular risk. This node does not contradict that TMAO is associated with risk; it reframes the question of WHY: attenuation after eGFR adjustment indicates the pathway may run partly or substantially through kidney function rather than functioning as an isolated diet-to-atherosclerosis mechanism. A system that only mapped a CONTRADICT here would mischaracterize a refinement of mechanism as a refutation of association.",
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.68,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Single recent large cohort; the authors themselves frame eGFR as a likely mediator (TMAO causally reduces eGFR) rather than a pure confounder, which is a substantive mechanistic claim still under investigation per the 2025 PMC narrative review on TMAO as a biomarker, which states a significant gap persists in human clinical trials assessing TMAO's potential causal role."
+        }
+      },
+      {
+        "ace_id": "ACE-EGG-PREPARATION-CONTEXT",
+        "vector_type": "CONTEXT_MUTATION",
+        "vector_links": [
+          "ACE-EGG-LDL-RCT",
+          "CONMUT-EGG-SATURATED-FAT-CONFOUND"
+        ],
+        "verbatim_claim": "Most cohort studies and RCTs measuring egg consumption do not stratify by preparation method or accompanying dietary pattern (e.g. eggs fried in butter alongside processed breakfast meats, versus boiled eggs in a Mediterranean-pattern diet); the cardiovascular risk profile attributed to 'egg consumption' in pooled analyses is therefore a composite of egg-as-food and egg-as-marker-of-broader-dietary-pattern.",
+        "source": {
+          "title": "Synthesis observation drawn from the source material underlying ACE-EGG-LDL-RCT and CONMUT-EGG-SATURATED-FAT-CONFOUND",
+          "status": "Derived observation, not a single citable primary source — flagged as such rather than attributed to a specific paper"
+        },
+        "mutation_logic": "This node exists to make explicit a limitation that runs through the entire eggs case rather than attaching to any single study: 'egg consumption' as an exposure variable in nutritional epidemiology is rarely operationalized identically across studies, and preparation/accompaniment context is a likely source of the heterogeneity the competition brief specifically asks about. Rather than fabricate a citation for this synthesis point, the node is honestly labeled as a derived observation pending a dedicated source search, which is listed as follow-up work.",
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.4,
+          "peer_scrutiny_status": "unreviewed_preprint_self_flagged_speculative",
+          "rationale": "Deliberately scored low and flagged as a synthesis observation rather than a sourced claim. Included specifically to demonstrate that the Ingestion layer should distinguish between claims with direct primary sources and structural observations a human or system makes about the evidence base as a whole — and to avoid the earlier-corrected mistake of asserting an uncited claim as if it had a verified source."
+        }
+      }
+    ]
+  },
+  "case_lhc": {
+    "case_label": "LHC microscopic black hole safety",
+    "discourse_id": "DISC-LHC-BLACKHOLE-SAFETY",
+    "structural_note": "Closed consensus case, included specifically to demonstrate topological contrast against the open COVID case. A genuine technical objection (Plaga 2008) was raised and received a direct, traceable rebuttal within 19 days — the graph should show low residual tension, not zero objections ever raised.",
+    "nodes": [
+      {
+        "ace_id": "ACE-LHC-COSMIC-RAY-SAFETY",
+        "verbatim_claim": "Cosmic rays of equal or higher energy than LHC collisions have struck Earth and astronomical bodies continuously for billions of years without producing catastrophic black holes; the stability of these bodies demonstrates LHC collisions pose no danger.",
+        "source": {
+          "title": "Review of the Safety of LHC Collisions",
+          "authors": [
+            "Ellis, J.",
+            "Giudice, G.",
+            "Mangano, M. L.",
+            "Tkachev, I.",
+            "Wiedemann, U."
+          ],
+          "publication_date": "2008-09-05",
+          "venue": "Journal of Physics G: Nuclear and Particle Physics",
+          "volume_issue": "35(11), 115004",
+          "doi_or_id": "10.1088/0954-3899/35/11/115004",
+          "arxiv_id": "0806.3414",
+          "status": "Peer-reviewed, endorsed by CERN Scientific Policy Committee"
+        },
+        "context_bounding": {
+          "epistemic_modality": "empirical_inductive_argument",
+          "nuance_preservation_notes": "Load-bearing premise: existence of dense astronomical bodies (white dwarfs, neutron stars) proves any stable black hole produced by cosmic rays would have been trapped and would have destroyed them by now. This premise is exactly what ACE-LHC-PLAGA-OBJECTION targets."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.95,
+          "peer_scrutiny_status": "peer_reviewed_and_independently_endorsed"
+        }
+      },
+      {
+        "ace_id": "ACE-LHC-EXTRADIM-DEPENDENCY",
+        "vector_type": "DEPEND",
+        "vector_target": "hypothetical_risk_scenario",
+        "verbatim_claim": "Microscopic black hole production at LHC energies is only theoretically conceivable under large extra-dimension models (e.g. ADD, Randall-Sundrum); standard 4D gravity makes it energetically impossible by many orders of magnitude.",
+        "source": {
+          "title": "A Large Mass Hierarchy from a Small Extra Dimension",
+          "authors": [
+            "Randall, L.",
+            "Sundrum, R."
+          ],
+          "publication_date": "1999",
+          "venue": "Physical Review Letters",
+          "doi_or_id": "10.1103/PhysRevLett.83.3370",
+          "status": "Peer-reviewed"
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.3,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Low score reflects that this is the unverified theoretical precondition the entire catastrophic-risk hypothesis depends on, not a judgment on the paper's own rigor within theoretical physics."
+        }
+      },
+      {
+        "ace_id": "ACE-LHC-PLAGA-OBJECTION",
+        "vector_type": "DEPEND",
+        "vector_target": "ACE-LHC-EXTRADIM-DEPENDENCY",
+        "verbatim_claim": "If Hawking radiation is suppressed below a certain mass threshold, metastable black holes could evade the white-dwarf trapping argument by passing through dense astronomical bodies without being captured, undermining the cosmic-ray safety proof.",
+        "source": {
+          "title": "On the potential catastrophic risk from metastable quantum-black holes produced at particle colliders",
+          "authors": [
+            "Plaga, R."
+          ],
+          "publication_date": "2008-08",
+          "venue": "arXiv",
+          "doi_or_id": "arXiv:0808.1415",
+          "status": "Preprint, not peer-reviewed, explicitly invites criticism in abstract"
+        },
+        "context_bounding": {
+          "epistemic_modality": "speculative_counter_hypothesis",
+          "nuance_preservation_notes": "Author explicitly frames the disagreement with Giddings-Mangano as methodological rather than purely empirical."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.18,
+          "peer_scrutiny_status": "unreviewed_preprint_self_flagged_speculative"
+        }
+      },
+      {
+        "ace_id": "ACE-LHC-GIDDINGS-REBUTTAL",
+        "vector_type": "CONTRADICT",
+        "vector_target": "ACE-LHC-PLAGA-OBJECTION",
+        "verbatim_claim": "The metastable black hole scenario proposed by Plaga is internally inconsistent: it misreads the conservative worst-case assumptions of the original analysis and cites a secondary source's outdated position rather than that author's more recent, updated comments.",
+        "source": {
+          "title": "Comments on claimed risk from metastable black holes",
+          "authors": [
+            "Giddings, S. B.",
+            "Mangano, M. L."
+          ],
+          "publication_date": "2008-08-29",
+          "venue": "arXiv",
+          "doi_or_id": "arXiv:0808.4087",
+          "status": "Preprint, direct technical rebuttal by original authors"
+        },
+        "context_bounding": {
+          "nuance_preservation_notes": "Published 19 days after Plaga's preprint. Addresses the specific technical claim point by point — this rapid, traceable, falsifiable exchange is what distinguishes a closed case from an open one, structurally."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.88,
+          "peer_scrutiny_status": "unreviewed_preprint",
+          "rationale": "Score reflects technical authority of original analysis authors responding to a direct misreading, despite the rebuttal itself being an unreviewed preprint."
+        }
+      },
+      {
+        "ace_id": "ACE-LHC-HAWKING-RADIATION",
+        "vector_type": "DEPEND",
+        "vector_target": "ACE-LHC-COSMIC-RAY-SAFETY",
+        "verbatim_claim": "Quantum mechanical effects cause black holes to emit particles as if they were hot bodies, leading to thermal evaporation; any black hole below a certain mass threshold would have fully evaporated long before now, with smaller black holes evaporating faster.",
+        "source": {
+          "title": "Particle creation by black holes",
+          "authors": [
+            "Hawking, S. W."
+          ],
+          "publication_date": "1975",
+          "venue": "Communications in Mathematical Physics",
+          "volume_issue": "43, 199-220",
+          "doi_or_id": "10.1007/BF02345020",
+          "status": "Peer-reviewed, foundational theoretical physics"
+        },
+        "context_bounding": {
+          "epistemic_modality": "foundational_theoretical_derivation",
+          "nuance_preservation_notes": "This is the theoretical mechanism that the cosmic-ray safety argument (ACE-LHC-COSMIC-RAY-SAFETY) implicitly assumes holds: any microscopic black hole produced would decay via Hawking radiation rather than persisting and accreting matter. ACE-LHC-PLAGA-OBJECTION specifically targets the scenario where Hawking radiation is suppressed below a mass threshold — making this node the actual theoretical fulcrum the entire safety debate depends on, not a peripheral citation."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.9,
+          "peer_scrutiny_status": "peer_reviewed",
+          "rationale": "Foundational, extensively cited (1975, still the basis of the field 50 years later), but it is a theoretical derivation, not a directly tested empirical observation — Hawking radiation itself has never been directly observed from an astrophysical black hole, only inferred theoretically and partially reproduced in laboratory analogue systems. Score reflects strong theoretical consensus, not direct empirical confirmation."
+        }
+      },
+      {
+        "ace_id": "ACE-LHC-LSAG-FULL-REPORT",
+        "vector_type": "SUPPORT",
+        "vector_target": "ACE-LHC-COSMIC-RAY-SAFETY",
+        "verbatim_claim": "The LHC Safety Assessment Group's full report addresses three hypothetical catastrophic scenarios (microscopic black holes, strangelets, vacuum bubbles/magnetic monopoles) and concludes there is no basis for any conceivable threat from LHC collisions, a conclusion subsequently endorsed by CERN's Scientific Policy Committee.",
+        "source": {
+          "title": "Review of the Safety of LHC Collisions",
+          "authors": [
+            "Ellis, J.",
+            "Giudice, G.",
+            "Mangano, M. L.",
+            "Tkachev, I.",
+            "Wiedemann, U."
+          ],
+          "publication_date": "2008-09-05",
+          "venue": "Journal of Physics G: Nuclear and Particle Physics",
+          "volume_issue": "35(11), 115004",
+          "doi_or_id": "10.1088/0954-3899/35/11/115004",
+          "arxiv_id": "0806.3414",
+          "status": "Peer-reviewed, endorsed by CERN Scientific Policy Committee"
+        },
+        "context_bounding": {
+          "epistemic_modality": "comprehensive_institutional_safety_review",
+          "nuance_preservation_notes": "This node is distinguished from ACE-LHC-COSMIC-RAY-SAFETY by scope: that node captures specifically the cosmic-ray inductive argument; this node captures the report's full three-part structure, making explicit that strangelets and vacuum bubbles were independently assessed risks, not folded into the black hole argument. Added in response to review feedback noting the LSAG report deserved its own node distinct from the single argument already mapped."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.95,
+          "peer_scrutiny_status": "peer_reviewed_and_independently_endorsed",
+          "rationale": "Same dual validation as ACE-LHC-COSMIC-RAY-SAFETY (peer-reviewed publication plus independent institutional endorsement), since both nodes derive from the same report; scored identically for that reason."
+        }
+      },
+      {
+        "ace_id": "ACE-LHC-STRANGELET-RISK",
+        "vector_type": "SUPPORT",
+        "vector_target": "ACE-LHC-LSAG-FULL-REPORT",
+        "verbatim_claim": "Strangelet production at the LHC is less likely than at RHIC, based on the probability of strangelet formation decreasing with increasing collision energy and on RHIC data disfavoring the 'distillation mechanism' models that had been proposed as a production pathway; RHIC's own multi-year search detected no strangelets.",
+        "source": {
+          "title": "Review of the Safety of LHC Collisions — Addendum on strangelets",
+          "authors": [
+            "LHC Safety Assessment Group"
+          ],
+          "publication_date": "2008",
+          "venue": "CERN (lsag.web.cern.ch)",
+          "status": "Institutional addendum report, dedicated specifically to the strangelet scenario, citing the main LSAG report's Section 5",
+          "url": "https://lsag.web.cern.ch/"
+        },
+        "secondary_sources": [
+          {
+            "title": "Review of the Safety of LHC Collisions (main report, Section 5)",
+            "doi_or_id": "10.1088/0954-3899/35/11/115004",
+            "note": "The addendum states explicitly that Section 5 of the main report already concluded there is no basis for any conceivable threat from strangelet production at LHC; the addendum elaborates with additional emphasis on two specific arguments (energy-dependence of production probability, RHIC distillation-mechanism evidence)."
+          }
+        ],
+        "context_bounding": {
+          "nuance_preservation_notes": "This node corrects an earlier external proposal that cited 'LSAG Safety Report, Section 4' for strangelet risk — verification found the correct location is Section 5 of the main 2008 report, with a separate, dedicated addendum document providing the detailed argument. Citing the wrong section number would have been exactly the kind of unverified-citation error this submission has worked to eliminate."
+        },
+        "epistemic_validation": {
+          "systemic_confidence_score": 0.91,
+          "peer_scrutiny_status": "institutional_report",
+          "rationale": "Strong empirical support (RHIC ran for years specifically monitoring for strangelets and found none) combined with a theoretical argument (energy-dependence) that is more probabilistic than the cosmic-ray argument's near-categorical inductive proof — scored slightly below ACE-LHC-COSMIC-RAY-SAFETY for that reason."
+        }
+      }
+    ]
+  },
+  "cross_case_summary": {
+    "total_nodes": 26,
+    "node_count_by_case": {
+      "covid": 10,
+      "eggs": 9,
+      "lhc": 7
+    },
+    "differentiated_topology": {
+      "covid": "High residual tension. Crux node (FCS) Z-score remains elevated; primary refutation itself unreviewed. Open case — appropriate diagnosis is 'active controversy, requires further primary data.'",
+      "eggs": "Tension resolves via frame separation (ConMut) rather than vector strength alone. Appropriate diagnosis is 'apparent conflict is largely definitional/methodological, not factual.'",
+      "lhc": "Low residual tension. The one genuine technical objection received a rapid, specific, traceable rebuttal. Appropriate diagnosis is 'closed consensus, objection raised and resolved.'"
+    },
+    "known_gaps_for_final_submission": [
+      "Source-accuracy and conflict-of-interest checks are not implemented: adversarial testing (see code repository, tests/test_adversarial.py) found the system catches structural incompleteness, fabricated DOIs (SOURCE_FABRICATED via Crossref lookup), and one-sided contradiction pressure (CDI), but not misattributed citations to real sources, combined fabrication attacks, or undisclosed funding conflicts. 3 of 6 red-team attack cases are not caught by automated checks — SOURCE_FABRICATED (DOI existence) and one-sided topology (CDI) are now detected; combined fabrication and COI detection remain open — listed honestly rather than implied to be solved.",
+      "The Empirical Lineage Metric's Prestige-to-Data Ratio remains a manually-applied rule, not an automated classifier; no precision/recall has been measured against a held-out set.",
+      "Z > 2.0 as a pruning threshold remains a heuristic borrowed from normal-distribution practice rather than empirically derived for this domain; running the reference implementation against the current 26-node dataset shows the threshold does not fire on any case graph even for the most contested node in each (COVID's Z=+1.77 is the closest), which is reported transparently in the code repository's README rather than adjusted to force a positive result.",
+      "Confidence scores remain calibrated relative to other nodes within the same case graph, not validated against ground truth or any external calibration set.",
+      "The semantic-comparison prompt does not declare its own text-access level to the model, so a comparison against a full report and against a single retrieved abstract are treated identically. Verified consequence: two of three discrepancies flagged on ACE-LHC-LSAG-FULL-REPORT during the July 13 real run were false positives caused by partial-abstract visibility. A prompt requiring an explicit access-level statement, a supporting quotation, and a default to UNCERTAIN below a minimum text length is identified as follow-up work, not yet implemented.",
+      "Two COVID-genomic nodes in the July 13 real run were blocked by an API-level safety refusal rather than evaluated, consistent with third-party benchmarking of surface-keyword-triggered refusals in biosecurity-adjacent tasks. A locally-hosted model for the semantic-comparison step would avoid this specific failure mode; its comparison quality relative to the current approach has not been tested."
+    ],
+    "code_repository_summary": {
+      "status": "Reference implementation included as a companion artifact — see repository README for full detail.",
+      "what_runs": "python3 -m epistemic_stack.cli summary | critical | check-cycles | verify-sync | demo-ingestion | demo-compounding, all against this same 26-node dataset, no external dependencies, no network access.",
+      "bugs_found_and_fixed_by_running_the_code": [
+        "Unweighted contradiction density: an early version of Crux Score gave a contested preprint-backed node the same score as a peer-reviewed Science-backed node, because CONTRADICT edges were counted, not weighted by the contradicting source's own credibility. Fixed by routing Econ through the same Wdep-style weighting already used for DEPEND edges.",
+        "No runtime cycle detection: EpistemicGraph is named and documented as a Directed Acyclic Graph but had no check preventing an actual cycle. Adversarial testing demonstrated two mutually-citing nodes could inflate each other's Crux Score from pure self-reference. Fixed by adding detect_cycles() and wiring it into the compounding protocol's edge-acceptance step, so a proposed edge that would create a cycle is now detected and rolled back.",
+        "DOI/arXiv existence check conflated network failure with confirmed absence: any exception (timeout, blocked endpoint, rate limit) was silently treated as 'not found', causing three real, verifiable sources to be misreported as SOURCE_FABRICATED. Fixed by introducing a three-state result (confirmed present / confirmed absent via HTTP 404 / inconclusive), where inconclusive is never treated as evidence of fabrication.",
+        "Semantic-comparison call crashed on empty API responses: an API-level safety refusal (triggered by genomic terminology in source text) returns no content blocks, which the original code assumed would always be present, causing an unhandled crash. Fixed to detect the empty-content case explicitly and report it as a flagged UNCERTAIN result distinguishing a likely refusal from a generic technical failure."
+      ],
+      "adversarial_testing_result": "3 of 6 red-team cases caught (fabricated DOIs via SFC, bias flooding via CDI, circular reasoning via cycle detection — combined fabrication and COI detection are not yet defended against; circular reasoning is, after the fix above). Reported as a named, scoped gap rather than implied to be solved."
+    }
+  }
+}

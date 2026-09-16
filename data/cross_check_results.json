@@ -1,0 +1,132 @@
+{
+  "ACE-SARS2-SIXFOLD-VARIANCE": {
+    "verdict": "PARTIALLY_OFF",
+    "explanation": "Core numeric claim (23 OOM across 6 estimates, ~7 OOM among non-participants) is verbatim-confirmed by the source. However, the node's description of who produced the 6 estimates is imprecise: source identifies them as Peter, Saar (the two debaters), the two judges, Scott Alexander himself, and Daniel Filan -- not generically 'two independent observers'. Also, the 'restricting to four non-participant analyses' framing in our node does not match the source, which instead describes removing Peter alone (~7 OOM) as the key comparison, not a four-analyst non-participant subset.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-JUDGE-CONSENSUS": {
+    "verdict": "PARTIALLY_OFF",
+    "explanation": "Judge verdict and zoonosis direction confirmed accurate. BUT the '~100 hours' figure is wrong: source (Scott Alexander) says 15 hours, a separate source (ermsta.com judge decision page) says 20 hours across 3 sessions, and the FLF competition brief itself says 'Over 15 hours of structured argument'. 100 hours overstates the actual debate length by roughly 5-7x. This is a real numeric error in our own node, not an attack -- found only by actually re-checking against the source.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-GENOME-FCS": {
+    "verdict": "ALIGNED",
+    "explanation": "Source confirms verbatim: 'peculiar pattern of unique restriction endonuclease recognition sites... characteristic of synthetic viruses' and 'more likely a product of synthetic genome assembly than natural evolution.' BsaI/BsmBI is the correct enzyme pair throughout the paper. Claim is a fair paraphrase, not an overstatement.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-GENOME-FCS-CRITIQUE": {
+    "verdict": "ALIGNED",
+    "explanation": "The 0.07% vs ~4.2% / 60-fold figure was directly confirmed when this source was first fetched and read in full during dataset construction. Verbatim text found: Hensel demonstrates the reported rarity was 0.07% rather than the actual ~4.2%, reducing the apparent anomaly by roughly 60x. Claim is a direct, accurate paraphrase.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-EPID-MARKET": {
+    "verdict": "PARTIALLY_OFF",
+    "explanation": "The verbatim claim text itself is accurately attributed -- source confirms 'geographically centered on this market' and spatial association with wildlife stalls in the southwest corner. NOT a misattribution. However, this is flagged PARTIALLY_OFF because the node lacks something the system applied consistently to Bruttel (ACE-SARS2-GENOME-FCS-CRITIQUE) but not here: published statistical critiques exist (Stoyan & Chiu, Journal of the Royal Statistical Society Series A, 2024, arguing the centroid/Monte-Carlo methodology is invalid; and a separate independent 'Zoonosis at the Huanan Seafood Market: A Critique' disputing the wildlife-stall spatial association specifically). Treating Worobey's claim as having a 0.74 confidence with no satellite critique node, while Bruttel's comparable claim got a dedicated critique node, is an inconsistency in how the system applies its own stated even-handedness.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-VOID-WIV": {
+    "verdict": "PARTIALLY_OFF",
+    "explanation": "Core fact confirmed and actually stronger than our claim states: WIV's viral sequence database 'was taken offline in September 2019' (not merely 'absent from peer-reviewed literature' as our node phrases it -- offline removal is a more specific, more consequential fact than passive absence). Two corrections needed: (1) the claim should specify the database was actively taken offline, not just unpublished; (2) the source attribution is incomplete -- this is the Senate HELP Committee MINORITY (Republican) staff interim report, not a full bipartisan committee finding, which matters for peer_scrutiny_status framing and should be stated explicitly rather than implied as a neutral government consensus document.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-WEISSMAN-BAYESIAN": {
+    "verdict": "ALIGNED",
+    "explanation": "Core claim confirmed: Weissman's Substack 'An Inconvenient Probability' is a real, independently-conducted Bayesian analysis concluding in favor of lab origin, exactly as our node states. One structural gap found, not a misattribution: Weissman's analysis explicitly engages with and partially relies on the Bruttel restriction-site argument (our ACE-SARS2-GENOME-FCS), a direct relational link between two of our own nodes that is not currently mapped as an edge in the graph. Listed as a follow-up structural improvement rather than corrected now, since adding it changes graph topology, not just node content.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-ROOTCLAIM-HSM-REBUTTAL": {
+    "verdict": "ALIGNED",
+    "explanation": "Verbatim-confirmed: source states 'We originally estimated p(HSM|Zoonosis)<0.1. Following more research...this is more likely <0.03', matching our node's 'below 0.03' figure exactly. Also confirms Rootclaim's overall lab-leak estimate rose to 94% post-debate, matching our node's note about the direction of post-loss revision. Accurate paraphrase.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-LINEAGE-AB-DISPUTE": {
+    "verdict": "PARTIALLY_OFF",
+    "explanation": "Core structure of the claim (Lineage A genetically closer to BANAL-52, two-mutation split, debated causal story) is confirmed accurate against the primary source (Astral Codex Ten Session 1.5). However, one specific factual sub-claim is now outdated: our node states Lineage B 'was the only lineage detected at the wet market,' but a more recent academic source (Liu et al. 2024, cited in Oxford Academic Virus Evolution 2025) reports detection of virus from BOTH lineages at the Huanan market, which the original Worobey/Pekar single-lineage framing did not anticipate. This doesn't invalidate the CONTEXT_MUTATION logic (the causal framing dispute is still real) but the specific evidentiary claim needs updating to reflect newer data.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-MORTALITY-DOSE": {
+    "verdict": "ALIGNED",
+    "explanation": "Re-confirmed: DOI 10.3389/fnut.2022.878979, authors (Mofrad, Naghshi, Lotfi, et al.), 55 studies, 2,772,486 participants all verbatim-match the actual Frontiers in Nutrition paper. Venue and methodology (random-effects dose-response meta-analysis) confirmed. The specific 7%/13% risk percentages were verified with direct quotation during original dataset construction; structural facts re-confirmed now independently.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-UMBRELLA-LOWQUALITY": {
+    "verdict": "ALIGNED",
+    "explanation": "DOI 10.1016/j.numecd.2025.103849 confirmed real and correctly attributed (Formisano et al., Nutrition Metabolism and Cardiovascular Diseases) -- independently re-confirmed via search and previously verified by external cross-check (ChatGPT session). Volume/issue (35:5, 2025) and the 'critically low strength' / pro-consumption conclusion both match the source.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-LDL-RCT": {
+    "verdict": "ALIGNED",
+    "explanation": "DOI 10.1016/j.ajcnut.2025.05.001 (Carter, Hill, Yandell et al., AJCN 122(1):83-91) confirmed real with correct date, volume, and pre-registered protocol (BMJ Open 10.1136/bmjopen-2023-081664). Previously independently confirmed by external cross-check (ChatGPT session).",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-DIABETES-RISK-SHIN": {
+    "verdict": "ALIGNED",
+    "explanation": "DOI 10.3945/ajcn.112.051318 (Shin, Xun, Nakamura, He, AJCN 98(1):146-159, 2013) independently re-confirmed real, matching authors, title, and journal. HR 1.42 (T2D general population) and HR 1.69 (CVD in diabetics) were directly quoted from the source during original dataset construction. Previously independently confirmed by external cross-check (ChatGPT session).",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-TMAO-MECHANISM": {
+    "verdict": "ALIGNED",
+    "explanation": "Both DOIs confirmed real: Nature 10.1038/nature09922 (Wang, Klipfell, Bennett et al., 2011, 472:57-63) and NEJM 10.1056/NEJMoa1109400 (Tang, Wang, Levison et al., 2013, 368:1575-84). The two-hard-boiled-eggs phosphatidylcholine challenge detail is verbatim-confirmed from the NEJM methods section ('ingestion of deuterium-labeled phosphatidylcholine...and two hard-boiled eggs'). Minor note: author ordering varies slightly across citation contexts (some list Tang first for the 2011 paper in secondary citations) but Wang et al. as first-author for Nature 2011 and Tang et al. for NEJM 2013 is the correct, standard attribution matching the original publications.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-TMAO-CONFOUND": {
+    "verdict": "ALIGNED",
+    "explanation": "DOI 10.1038/s41598-025-05903-3 (Budoff et al., Scientific Reports 2025, MESA cohort) confirmed real and correctly attributed by external cross-check (ChatGPT session). eGFR-attenuation framing matches the paper's mediator hypothesis as previously fetched and read in full.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "CONMUT-EGG-SATURATED-FAT-CONFOUND": {
+    "verdict": "ALIGNED",
+    "explanation": "This is a synthesis/relational node (mutation_logic field), not a direct source citation -- it links ACE-EGG-MORTALITY-DOSE and ACE-EGG-LDL-RCT, both independently verified ALIGNED above. The logical claim (population-correlational vs causal-mechanistic frames are not in factual contradiction) is a reasoning step, not an empirical claim requiring source verification.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-CRUX-ACKNOWLEDGEMENT": {
+    "verdict": "ALIGNED",
+    "explanation": "Drawn from the discussion section of ACE-EGG-MORTALITY-DOSE's own source (10.3389/fnut.2022.878979), already confirmed ALIGNED above. The claim that confounding nutrients explain conflicting results is a standard interpretive statement common in nutritional epidemiology discussion sections.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-EGG-PREPARATION-CONTEXT": {
+    "verdict": "UNVERIFIABLE",
+    "explanation": "This node is honestly self-flagged in its own source field as 'a derived observation, not a single citable primary source.' Correctly excluded from the ALIGNED/MISATTRIBUTED scale since it makes no specific attribution claim to verify -- the node's low confidence score (0.40) and explicit flagging already reflect this status. No correction needed; this is the system working as intended for unsourced synthesis claims.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-COSMIC-RAY-SAFETY": {
+    "verdict": "ALIGNED",
+    "explanation": "Direct verbatim match: source states 'stability of astronomical bodies indicates that such collisions cannot be dangerous,' citing cosmic ray collisions with Earth, Sun, neutron stars, white dwarfs at energies higher than LHC. DOI 10.1088/0954-3899/35/11/115004 and arXiv:0806.3414 both confirmed real.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-LSAG-FULL-REPORT": {
+    "verdict": "ALIGNED",
+    "explanation": "Verbatim match: 'we study the possible production at the LHC of hypothetical objects such as vacuum bubbles, magnetic monopoles, microscopic black holes and strangelets, and find no associated risks' -- exactly the three-scenario structure (black holes, strangelets, vacuum bubbles/monopoles) our node describes. CERN Scientific Policy Committee endorsement independently confirmed via CERN's own safety page.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-PLAGA-OBJECTION": {
+    "verdict": "ALIGNED",
+    "explanation": "Confirmed via Wikipedia's independently-sourced summary: 'On 10 August 2008, Rainer Plaga...posted a research paper...concluding that LHC safety studies have not definitely ruled out the potential catastrophic threat from microscopic black holes, including the possible danger from Hawking radiation' -- matches our node's date, author, and Hawking-radiation-suppression framing exactly. arXiv:0808.1415 confirmed real.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-GIDDINGS-REBUTTAL": {
+    "verdict": "ALIGNED",
+    "explanation": "Confirmed: 'follow-up paper posted on arXiv on 29 August 2008, Steven Giddings and Michelangelo Mangano responded to Plaga's concerns. They pointed out what they see as a basic inconsistency in Plaga's calculation' -- date (19 days after Plaga, matching our '19 days' claim) and the 'inconsistency' framing both verbatim-confirmed. arXiv:0808.4087 confirmed real.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-HAWKING-RADIATION": {
+    "verdict": "ALIGNED",
+    "explanation": "DOI 10.1007/BF02345020 (Hawking, Communications in Mathematical Physics, 1975, vol 43, 199-220) re-confirmed real and correctly attributed by external cross-check (ChatGPT session). Mass-threshold evaporation framing is standard, accurate description of Hawking radiation theory.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-STRANGELET-RISK": {
+    "verdict": "ALIGNED",
+    "explanation": "Section number (5, not 4) independently confirmed correct by external cross-check (ChatGPT session) and by direct re-fetch of the LSAG report, which explicitly lists 'strangelets' alongside black holes and vacuum bubbles in its main abstract scope. The 'distillation mechanism' and RHIC empirical search framing matches established public discussion of the strangelet safety argument.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-SARS2-EPID-MARKET-CRITIQUE": {
+    "verdict": "ALIGNED",
+    "explanation": "Node was constructed directly from the same search results that surfaced the Stoyan & Chiu (2024, J Royal Statistical Society Series A, 187(3):710-715) and 'Zoonosis at the Huanan Seafood Market: A Critique' sources during this cross-check session. Claim text is a direct paraphrase of the abstract's two stated grounds for invalidity (centroid assumption, flawed Monte Carlo test).",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  },
+  "ACE-LHC-EXTRADIM-DEPENDENCY": {
+    "verdict": "ALIGNED",
+    "explanation": "DOI 10.1103/PhysRevLett.83.3370 (Randall, Sundrum, 'A Large Mass Hierarchy from a Small Extra Dimension', Physical Review Letters 1999) is a real, well-known, extensively-cited theoretical physics paper -- this is standard, uncontested literature establishing the extra-dimension framework. Claim that microscopic black hole production at LHC energies requires such models (rather than standard 4D gravity) is the correct, standard physics characterization.",
+    "checked_by": "claude-sonnet-4-6-manual-session-2026-06-21"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "graph_label": "COVID-19 origins — Independent Graph B",
+  "construction_note": "Built deliberately from sources NOT used in the main graph (nodes_master.json case_covid), specifically: Pekar 2022 molecular clock, Bloom 2025 phylogenetic critique, WHO-China joint report, and the FLF competition brief's own framing of Bayesian disagreement. This graph takes a zoonosis-leaning starting point by design, to test whether the compounding protocol surfaces the asymmetry and forces resolution rather than silently absorbing it.",
+  "nodes": [
+    {
+      "ace_id": "B-SARS2-MOLECULAR-CLOCK",
+      "vector_type": "SUPPORT",
+      "vector_target": "ACE-SARS2-EPID-MARKET",
+      "verbatim_claim": "Molecular phylodynamic analysis of early SARS-CoV-2 genomes indicates two separate zoonotic introductions from animals to humans, the first involving Lineage B around 18 November 2019 and the second involving Lineage A within weeks of that event, making it highly unlikely the virus was circulating widely in humans before November 2019.",
+      "source": {
+        "title": "The molecular epidemiology of multiple zoonotic origins of SARS-CoV-2",
+        "authors": [
+          "Pekar, J. E.",
+          "Magee, A.",
+          "Parker, E.",
+          "et al."
+        ],
+        "publication_date": "2022-07-26",
+        "venue": "Science",
+        "volume_issue": "377(6609), 960-966",
+        "doi_or_id": "10.1126/science.abp8337",
+        "status": "Peer-reviewed"
+      },
+      "epistemic_validation": {
+        "systemic_confidence_score": 0.71,
+        "peer_scrutiny_status": "peer_reviewed",
+        "rationale": "Science-published, 29 authors, extensively cited (199 citations). Has an erratum (Fig. 4 printed incorrectly, corrected October 2023) which is a transparency signal, not an accuracy problem. Score is not higher because a direct critique of the statistical methodology exists (Bloom 2025, Molecular Biology and Evolution), mapped as B-SARS2-MOLECULAR-CLOCK-CRITIQUE below."
+      }
+    },
+    {
+      "ace_id": "B-SARS2-MOLECULAR-CLOCK-CRITIQUE",
+      "vector_type": "CONTRADICT",
+      "vector_target": "B-SARS2-MOLECULAR-CLOCK",
+      "verbatim_claim": "The data available are insufficient to confidently root the SARS-CoV-2 phylogenetic tree, meaning the two-introduction conclusion of Pekar et al. cannot be established with the confidence claimed.",
+      "source": {
+        "title": "The Data are Insufficient to Confidently Root the SARS-CoV-2 Phylogenetic Tree",
+        "authors": [
+          "Bloom, J. D."
+        ],
+        "publication_date": "2025",
+        "venue": "Molecular Biology and Evolution",
+        "volume_issue": "42(6)",
+        "doi_or_id": "10.1093/molbev/msaf118",
+        "status": "Peer-reviewed critique"
+      },
+      "epistemic_validation": {
+        "systemic_confidence_score": 0.62,
+        "peer_scrutiny_status": "peer_reviewed",
+        "rationale": "Published in a peer-reviewed journal by a credible computational virologist (Jesse Bloom, Fred Hutchinson Cancer Center). Raises a methodological point about rooting confidence rather than disputing the underlying genomic data. Not yet responded to directly by Pekar et al. in a published form as of the dataset construction date."
+      }
+    },
+    {
+      "ace_id": "B-SARS2-WHO-JOINT-STUDY",
+      "vector_type": "CONTEXT_MUTATION",
+      "vector_links": [
+        "ACE-SARS2-VOID-WIV",
+        "B-SARS2-MOLECULAR-CLOCK"
+      ],
+      "verbatim_claim": "The WHO-China joint study (January-February 2021) concluded that a laboratory incident was 'extremely unlikely' as a pathway of introduction, while direct zoonotic spillover and cold-chain transmission were considered 'possible to likely'; the study also noted that the Huanan market may not have been the original source of the outbreak.",
+      "source": {
+        "title": "WHO-convened Global Study of Origins of SARS-CoV-2: China Part",
+        "authors": [
+          "WHO-China Joint Study Team"
+        ],
+        "publication_date": "2021-03-30",
+        "venue": "World Health Organization",
+        "url": "https://www.who.int/publications/i/item/who-convened-global-study-of-origins-of-sars-cov-2-china-part",
+        "status": "Institutional report, joint WHO-China investigation"
+      },
+      "mutation_logic": "ACE-SARS2-VOID-WIV frames the absence of WIV database records as a meaningful evidentiary gap. This node provides the WHO's own framing of that same evidentiary situation: the joint study team evaluated the lab-leak hypothesis with the same incomplete information and classified it 'extremely unlikely' rather than 'actively concealed'. These two nodes are not in factual contradiction — they agree on what data are missing — but they frame the epistemic significance of that gap in structurally opposite ways, making this a genuine CONTEXT_MUTATION rather than a CONTRADICT.",
+      "epistemic_validation": {
+        "systemic_confidence_score": 0.58,
+        "peer_scrutiny_status": "institutional_report",
+        "rationale": "The WHO-China joint report has been extensively criticized for limited access to primary data and Chinese government involvement in study design. These limitations are known and widely documented. Score reflects the report's formal institutional status while flagging that its evidentiary base was contested even by WHO's own subsequent statements (the Director-General called for further studies and acknowledged the data access was insufficient)."
+      }
+    },
+    {
+      "ace_id": "B-SARS2-FLF-BAYESIAN-FRAMING",
+      "vector_type": "DEPEND",
+      "vector_target": "ACE-SARS2-SIXFOLD-VARIANCE",
+      "verbatim_claim": "Six independent Bayesian analyses of the same underlying COVID-19 origins evidence base spanned roughly twenty-three orders of magnitude in final odds, establishing that the disagreement is not merely about which hypothesis is true but about how to formally quantify uncertainty at all.",
+      "source": {
+        "title": "FLF Epistemic Case Study Competition Brief — COVID-19 Origins Case",
+        "authors": [
+          "Future of Life Foundation"
+        ],
+        "publication_date": "2026",
+        "venue": "futureoflife.org",
+        "status": "Competition brief, primary source for the case selection rationale"
+      },
+      "epistemic_validation": {
+        "systemic_confidence_score": 0.95,
+        "peer_scrutiny_status": "directly_observable_from_primary_source",
+        "rationale": "The 23-orders-of-magnitude framing is the FLF brief's own stated justification for selecting this case. High confidence because this is a factual claim about what the brief says, not about the underlying COVID science."
+      }
+    },
+    {
+      "ace_id": "B-SARS2-WIV-ACCESS-FRAMING",
+      "vector_type": "CONTEXT_MUTATION",
+      "vector_links": [
+        "ACE-SARS2-VOID-WIV"
+      ],
+      "verbatim_claim": "The absence of WIV virus database records is consistent with standard Chinese government practice of restricting biosecurity-sensitive data from public access, and does not by itself constitute evidence of deliberate concealment related to SARS-CoV-2 origins.",
+      "source": {
+        "title": "WHO-convened Global Study of Origins of SARS-CoV-2: China Part (discussion section on data access)",
+        "authors": [
+          "WHO-China Joint Study Team"
+        ],
+        "publication_date": "2021-03-30",
+        "venue": "World Health Organization",
+        "url": "https://www.who.int/publications/i/item/who-convened-global-study-of-origins-of-sars-cov-2-china-part",
+        "status": "Institutional report"
+      },
+      "mutation_logic": "ACE-SARS2-VOID-WIV frames the WIV database being taken offline as a meaningful evidentiary gap pointing toward concealment. This node frames the same fact differently: restricted biosecurity databases are routine in China regardless of pandemic origins. Both nodes agree on the underlying fact (the database is offline). They disagree on what that fact means epistemically. This is a CONTEXT_MUTATION within the COVID graph itself, not a factual contradiction — the same data supports structurally opposite causal narratives.",
+      "epistemic_validation": {
+        "systemic_confidence_score": 0.45,
+        "peer_scrutiny_status": "institutional_report",
+        "rationale": "The WHO report's credibility is limited by restricted data access (acknowledged even by the WHO Director-General). Score is low because the 'routine practice' interpretation is plausible but not independently verified — it is an interpretive frame offered by an institutional source with known access limitations."
+      }
+    },
+    {
+      "ace_id": "B-SARS2-MARKET-EPICENTER",
+      "verbatim_claim": "The earliest known COVID-19 cases from December 2019 show tight spatial clustering around the Huanan Seafood Market, concentrated near the wildlife stalls in the western section.",
+      "source": {
+        "title": "The Huanan Seafood Wholesale Market in Wuhan was the early epicenter of the COVID-19 pandemic",
+        "authors": [
+          "Worobey, M.",
+          "et al."
+        ],
+        "publication_date": "2022-07-26",
+        "venue": "Science",
+        "doi_or_id": "10.1126/science.abp8715",
+        "status": "Peer-reviewed"
+      },
+      "construction_note": "Deliberately built from the same source as ACE-SARS2-EPID-MARKET in Graph A, with slightly different wording, to test whether the deduplication system catches near-paraphrases of the same underlying claim.",
+      "epistemic_validation": {
+        "systemic_confidence_score": 0.74,
+        "peer_scrutiny_status": "peer_reviewed",
+        "rationale": "Same source as ACE-SARS2-EPID-MARKET — this node should be flagged as a probable duplicate by the compounding protocol."
+      }
+    }
+  ]
+}
